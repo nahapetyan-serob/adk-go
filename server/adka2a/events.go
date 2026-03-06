@@ -182,7 +182,9 @@ func messageToEvent(ctx agent.InvocationContext, msg *a2a.Message, partConverter
 		if err != nil {
 			return nil, fmt.Errorf("failed to convert message part: %w", err)
 		}
-		parts = append(parts, genaiPart)
+		if genaiPart != nil {
+			parts = append(parts, genaiPart)
+		}
 	}
 
 	event := NewRemoteAgentEvent(ctx)
@@ -210,7 +212,9 @@ func artifactUpdateEventToEvent(ctx agent.InvocationContext, update *a2a.TaskArt
 		if err != nil {
 			return nil, fmt.Errorf("failed to convert artifact part: %w", err)
 		}
-		parts = append(parts, genaiPart)
+		if genaiPart != nil {
+			parts = append(parts, genaiPart)
+		}
 	}
 
 	event := NewRemoteAgentEvent(ctx)
@@ -232,7 +236,9 @@ func taskToEvent(ctx agent.InvocationContext, task *a2a.Task, partConverter A2AP
 			if err != nil {
 				return nil, fmt.Errorf("failed to convert artifact part: %w", err)
 			}
-			artifactParts = append(artifactParts, genaiPart)
+			if genaiPart != nil {
+				artifactParts = append(artifactParts, genaiPart)
+			}
 		}
 
 		lrtIDs := getLongRunningToolIDs(artifact.Parts, artifactParts)
@@ -250,7 +256,9 @@ func taskToEvent(ctx agent.InvocationContext, task *a2a.Task, partConverter A2AP
 			if err != nil {
 				return nil, fmt.Errorf("failed to convert status message parts: %w", err)
 			}
-			msgParts = append(msgParts, genaiPart)
+			if genaiPart != nil {
+				msgParts = append(msgParts, genaiPart)
+			}
 		}
 		lrtIDs := getLongRunningToolIDs(task.Status.Message.Parts, msgParts)
 
@@ -293,7 +301,9 @@ func finalTaskStatusUpdateToEvent(ctx agent.InvocationContext, update *a2a.TaskS
 			if err != nil {
 				return nil, fmt.Errorf("failed to convert status message parts: %w", err)
 			}
-			parts = append(parts, genaiPart)
+			if genaiPart != nil {
+				parts = append(parts, genaiPart)
+			}
 		}
 	}
 	if update.Status.State == a2a.TaskStateFailed && len(parts) == 1 && parts[0].Text != "" {
